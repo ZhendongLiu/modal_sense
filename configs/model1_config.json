@@ -1,0 +1,8 @@
+{"model":"token level",
+ "modals":["can","could","may","might","should","shall","must","will"],
+ "generator":{"token_dim":768,
+ 			  "sense_dim":768,
+ 			  "hid_dim":256},
+ "discriminator":{"input_dim":768,
+ 				  "hid_dim":256}
+}
