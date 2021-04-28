@@ -1,4 +1,5 @@
 import torch
+from tqdm import tqdm
 
 def get_sents_from_file(file_path):
 
@@ -6,6 +7,11 @@ def get_sents_from_file(file_path):
     sents = file.read()
     sents = sents.split('\n')
     return sents[:-1]
+    
+def save_sents(sents, file_path):
+    with open(file_path,"w") as file:
+        for sent in tqdm(sents):
+            file.write(sent + '\n')
 
 def get_bert_embeddings(tokenizer, model, sents, word, device, layer = 12):
     '''
@@ -15,16 +21,14 @@ def get_bert_embeddings(tokenizer, model, sents, word, device, layer = 12):
     sentences = list()
     
     
-    for sent in sents:
+    for sent in tqdm(sents):
 
         tokens = tokenizer.tokenize(sent)
         if len(tokens) > 512:
             continue
         encoded_input = tokenizer(sent, return_tensors='pt')
-        encoded_input.to(device)
         output = model(**encoded_input)
         vectors = output.hidden_states[layer]
-        
         
         for i in range(len(tokens)):
             if tokens[i] == word:
@@ -37,6 +41,6 @@ def get_bert_embeddings(tokenizer, model, sents, word, device, layer = 12):
                 else:
                     
                     embeddings = torch.cat((embeddings,embedding[None,:]),dim = 0)
-    embeddings.to(device)
+    
                     
-    return embeddings,sentences
+    return embeddings.to(device),sentences

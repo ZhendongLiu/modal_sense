@@ -1,8 +1,13 @@
-{"model":"token level",
- "modals":["can","could","may","might","should","shall","must","will"],
+{"mode":"sense level",
+ "modals":["can","might","should","must"],
  "generator":{"token_dim":768,
  			  "sense_dim":768,
  			  "hid_dim":256},
  "discriminator":{"input_dim":768,
- 				  "hid_dim":256}
+ 				  "hid_dim":256},
+"k_assignment":{"can":3,
+				"might":3,
+				"should":3,
+				"must":3
+				}
 }

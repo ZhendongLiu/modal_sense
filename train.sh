@@ -1,1 +1,1 @@
-python train.py configs/model1_config.json 100 10 200 modal_sentences model_checkpoints
+python train.py configs/model1_config.json 15 15 128 modal_sentences/train model_checkpoints/sense_level_1 cuda:2
