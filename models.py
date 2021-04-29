@@ -55,11 +55,18 @@ class joint_align(nn.Module):
         labels = None
         segments = list()
         last = 0
-        
+        embedding_dict = dict()
+        centroid_dict = dict()
+        distribution_dict = dict()
         for modal, embeddings in batch_embeddings.items():
             modal_idx = self.modal_idx[modal]
             module = self.submodules[modal]
-            sense_embedding = module(embeddings)
+            module_out = module(embeddings)
+            sense_embedding = module_out['output']
+            embedding_dict[modal] = module_out.get('sense embeddings', sense_embedding)
+            centroid_dict[modal] = module_out['output']
+            distribution_dict[modal] = module_out['distribution']
+
             label = torch.tensor([modal_idx] * sense_embedding.shape[0])
             segments.append((last, last + sense_embedding.shape[0]))
             last += sense_embedding.shape[0]
@@ -73,7 +80,10 @@ class joint_align(nn.Module):
         
         return {"sense_embeddings":sense_embeddings, 
                 "labels":labels.to(device), 
-                "segments":segments}
+                "segments":segments,
+                "embedding_dict": embedding_dict,
+                "centroid_dict":centroid_dict,
+                'distribution_dict':distribution_dict}
     
         
 

@@ -38,7 +38,7 @@ def GAN_train(mode,
 	discr_loss_log = list()
 
 	#cnt for learning rate scheduling
-	cnt = 0
+	cnt = 1
 	print("Training starts")
 
 	for i in range(epoch):
@@ -74,7 +74,9 @@ def GAN_train(mode,
 		for j in range(sub_epoch):
 			start_1 = time.time()
 			gen_out = generator(batch_embeddings,device)
-			probs = discriminator(gen_out["sense_embeddings"])
+			discr_in = gen_out["sense_embeddings"]
+			discr_in = discr_in.detach()
+			probs = discriminator(discr_in)
 			loss = discr_loss(probs,gen_out["labels"])
 			discr_optimizer.zero_grad()
 			loss.backward(retain_graph = True)

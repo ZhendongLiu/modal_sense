@@ -1,6 +1,31 @@
 import torch
 from torch import nn
 
+
+class sense_for_token1(nn.Module):
+    '''
+    generate sense embeddings for a batch of modal representations
+    '''
+    def __init__(self, token_dim, sense_dim, hidden_dim):
+        super(sense_for_token,self).__init__()
+        self.mlp = nn.Sequential(
+            nn.Linear(token_dim, hidden_dim),
+            nn.sigmoid()
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.sigmoid()
+            nn.Linear(hidden_dim,sense_dim),
+            nn.sigmoid()
+            #nn.BatchNorm1d(sense_dim)
+        )
+    
+    def forward(self, batch):
+        '''
+        in: [batch, token_dim]: batched input of token embeddings for a single word
+        out: [batch, sense_dim]: mapped vector in a sense space. 
+        '''
+        return {"output":self.mlp(batch)}
+
+
 class sense_for_token(nn.Module):
     '''
     generate sense embeddings for a batch of modal representations
@@ -11,6 +36,7 @@ class sense_for_token(nn.Module):
             nn.Linear(token_dim, hidden_dim),
             nn.Linear(hidden_dim, hidden_dim),
             nn.Linear(hidden_dim,sense_dim),
+            nn.BatchNorm1d(sense_dim)
         )
     
     def forward(self, batch):
@@ -18,7 +44,7 @@ class sense_for_token(nn.Module):
         in: [batch, token_dim]: batched input of token embeddings for a single word
         out: [batch, sense_dim]: mapped vector in a sense space. 
         '''
-        return self.mlp(batch)
+        return {"output":self.mlp(batch)}
 
 class sense_centroids(nn.Module):
     
@@ -42,7 +68,7 @@ class sense_centroids(nn.Module):
         in: batch: [batch, sense_dim]
         out: []
         '''
-        sense_embeddings = self.map_to_sense(batch)
+        sense_embeddings = self.map_to_sense(batch)['output']
 
         distribution = torch.softmax(self.mlp(sense_embeddings),dim = 1)
         #distribution: [batch, k]
@@ -50,7 +76,9 @@ class sense_centroids(nn.Module):
         sense_repr = distribution.T.matmul(sense_embeddings)/(torch.sum(distribution,dim=0)+1e-7)[:,None]
         #sense_repr: [k, sense_dim]
 
-        return sense_repr
+        return {"sense embeddings": batch,
+                "output" : sense_repr,
+                'distribution': distribution}
 
 
 

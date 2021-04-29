@@ -26,9 +26,9 @@ def distance_regularization_loss(sense_embeddings, segments,device):
 
 def combine_loss(dist, sense_embeddings,segments,device,t):
     l1 = neg_entropy(dist)
-    l2 = cos_sim_regularization_loss(sense_embeddings,segments, device)
-
+    #l2 = cos_sim_regularization_loss(sense_embeddings,segments, device)
+    l2 = distance_regularization_loss(sense_embeddings,segments, device)
     
-    return l1 + l2, l1, l2
+    return l1 + (1/t)*l2, l1, l2
     #+ (0.01/t**2) * l2, l1, l2
         
