@@ -1,0 +1,1 @@
+python ../train.py ../configs/config2.json 170 1 1 10 ../../modal_sentences/train ../checkpoints/model_mlp_1 cuda:2

@@ -1,0 +1,18 @@
+{"generator":
+    {"modals": ["can","may","must", "should"],
+     "k_assignment": {"can": 4, 
+                      "may": 4,
+                      "must": 3,
+                      "should":3
+                     },
+      "hid_dim":1024,
+      "sense_dim":300,
+      "token_dim":768,
+      "sub_module_use_mlp":true,
+      "share_centroids":false
+    },
+ "discriminator":
+    {"input_dim":300,
+     "hid_dim":1024
+    }
+}

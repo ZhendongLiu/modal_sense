@@ -1,0 +1,1 @@
+python ../train.py ../configs/config1_1.json 1700 1 1 15 ../../modal_sentences/train ../checkpoints/model_mindist_1_share_centroids_1 cuda:2
